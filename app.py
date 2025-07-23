@@ -16,9 +16,6 @@ if not uploaded_file:
 df = pd.read_excel(uploaded_file)
 df.columns = df.columns.str.strip()
     
-st.subheader("Dados carregados")
-st.subheader("Arquivo carregado com sucesso ✅")
-    
 # Colunas obrigatórias    
 mailing_cols = [
     'ID','ORIGEM', 'CÓDIGO DA INSTITUIÇÃO', 'EMPRESA', 'TELEFONE DA INSTITUIÇÃO', 
@@ -44,14 +41,14 @@ def calcular_metricas(df_):
     total = len(df_)
     acionados = df_['DATA DO ACIONAMENTO I'].notna().sum()
     cobertura = (acionados / total * 100) if total > 0 else 0
-    trabalhados = df_[df_['FUNIL DE ATENDIMENTO']].str.upper().ne('LEAD').shape[0]
+    trabalhados = df_[df_['FUNIL DE ATENDIMENTO'].str.upper() != 'LEAD' ].shape[0]
     falados = df_[df_['FUNIL DE ATENDIMENTO'].isin(['FALADO'])].shape[0]
     falados_validos = df_[df_['FUNIL DE ATENDIMENTO'].isin(['FALADO VÁLIDO'])].shape[0]
     agendamentos = df_[df_['FUNIL DE ATENDIMENTO'].isin(['REUNIÃO AGENDADA'])].shape[0]
     return total, acionados, cobertura, trabalhados, falados, falados_validos, agendamentos
 
 # Status Geral
-st.subheader("📌 Status Geral da Base")
+st.subheader("Status Geral da Base")
 total, acionados, cobertura, *_ = calcular_metricas(df)
 col1, col2, col3 = st.columns(3)
 col1.metric("LEADS", total)
@@ -82,14 +79,13 @@ for label, dfx in {
     col7.metric("REUNIÃO AGENDADA", agendamentos)
     
 # Funil de Vendas
-if 'ETAPA DO FUNIL' in df.columns:
+if 'FUNIL DE ATENDIMENTO' in df.columns:
     st.subheader("🚀 Funil de Vendas Geral")
 
     funil_df = (
-        df['FUNIL DE VENDA']
+        df['FUNIL DE ATENDIMENTO']
         .value_counts()
         .reset_index()
-        .rename(columns={'index': 'Etapa', 'ETAPA DO FUNIL': 'Quantidade'})
     )
 
     chart = alt.Chart(funil_df).mark_bar().encode(
@@ -101,9 +97,6 @@ if 'ETAPA DO FUNIL' in df.columns:
     st.altair_chart(chart)
 
 # Tabela opcional
-st.subheader("📄 Visualizar Contatos (opcional)")
-if st.checkbox("Mostrar tabela com todos os dados filtrados"):
+st.subheader("Ver os dados do mailing")
+if st.toggle("Mostrar tabela com todos os dados filtrados"):
     st.dataframe(df)
-    
-
-
