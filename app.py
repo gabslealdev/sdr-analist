@@ -15,6 +15,18 @@ if not uploaded_file:
 
 df = pd.read_excel(uploaded_file)
 df.columns = df.columns.str.strip()
+
+# lista todas as colunas do tipo data
+data_cols = [
+    'DATA DO ACIONAMENTO I',
+    'DATA DO ACIONAMENTO II',
+    'DATA DO ACIONAMENTO III',
+    'DATA DO ACIONAMENTO IV'
+]
+
+# Conversão para datetime
+for col in data_cols:
+    df[col] = pd.to_datetime(df[col], errors='coerce')
     
 # Colunas obrigatórias    
 mailing_cols = [
