@@ -27,7 +27,7 @@ def exibir_meta_diaria(df: pd.DataFrame, meta: int = 15):
         st.info("Nenhum acionamento registrado hoje.")
 
 
-def exibir_meta_semanal(df: pd.DataFrame, meta: int = 5):
+def exibir_meta_semanal(df: pd.DataFrame, meta: int = 3):
     resumo_semana = calcular_reunioes_semana(df, meta)
     st.subheader("\U0001F4C5 Meta Semanal de Reuniões Agendadas")
 
