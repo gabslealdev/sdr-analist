@@ -5,7 +5,7 @@ from utils.metrics import calcular_atingimento_diario, calcular_reunioes_semana
 
 
 
-def exibir_meta_diaria(df: pd.DataFrame, meta: int = 30):
+def exibir_meta_diaria(df: pd.DataFrame, meta: int = 15):
     resumo_dia = calcular_atingimento_diario(df, meta)
     st.subheader("\U0001F4DE Meta Diária de Acionamentos")
 
